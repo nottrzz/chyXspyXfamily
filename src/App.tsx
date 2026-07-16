@@ -1,52 +1,64 @@
 import { useState, useEffect } from 'react';
+import ProjectSection from './components/ProjectSection'; 
+import { HeroArtwork } from './components/HeroArtwork'; // <- Pastikan di file HeroArtwork.tsx diexport sebagai named export 'export const HeroArtwork ...'
 
 type SectionKey = 'profile' | 'project' | 'tech_stack' | 'contact';
 
-type Project = {
-  id: string;
-  title: string;
-  category: string;
-  status: string;
-  desc: string;
-  imageUrl: string;
+// Metadata Dekripsi Taktis Dinamis untuk Elemen Kanan Bawah (Reaktif)
+const sectionMetadata: Record<SectionKey, { match: string; alias: string; directive: string; code: string }> = {
+  profile: {
+    match: "YOR_FORGER",
+    alias: "THORN_PRINCESS",
+    directive: "PROTECT_ANYA",
+    code: "NO. 002-3848-CHYY"
+  },
+  project: {
+    match: "LOID_FORGER",
+    alias: "TWILIGHT",
+    directive: "OPERATION_STRIX",
+    code: "NO. 001-7110-CHYY"
+  },
+  tech_stack: {
+    match: "ANYA_FORGER",
+    alias: "SUBJECT_007",
+    directive: "SECURE_PEANUTS",
+    code: "NO. 007-9912-CHYY"
+  },
+  contact: {
+    match: "FIONA_FROST",
+    alias: "NIGHTFALL",
+    directive: "SUPPORT_TWILIGHT",
+    code: "NO. 009-4410-CHYY"
+  }
 };
 
 function App() {
   const [activeSection, setActiveSection] = useState<SectionKey>('profile');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
-  const [activeProjectFilter, setActiveProjectFilter] = useState('ALL');
-  
-  // State baru untuk Modal Projects
-  const [selectedProjectForModal, setSelectedProjectForModal] = useState<Project | null>(null);
+  const [currentTime, setCurrentTime] = useState('');
 
-  // ================= DEWA GFX HIGH-QUALITY CHARACTER ASSETS =================
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes}`);
+    };
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   const characterImages: Record<SectionKey, string> = {
-    profile: "https://k.top4top.io/p_38489zc9b1.png",    // Casual Clerk
-    project: "https://l.top4top.io/p_3848jmh3w2.png",    // Combat Vibe
-    tech_stack: "https://k.top4top.io/p_38488tk011.png", // Weapons Ready
-    contact: "https://k.top4top.io/p_38488qktm1.png"     // Shadow Guild 
+    profile: "https://k.top4top.io/p_38489zc9b1.png",    
+    project: "https://l.top4top.io/p_3848jmh3w2.png",    
+    tech_stack: "https://k.top4top.io/p_38488tk011.png", 
+    contact: "https://k.top4top.io/p_38488qktm1.png"     
   };
 
   const cropStripLeft = "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=300&auto=format&fit=crop"; 
   const cropStripRight = "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300&auto=format&fit=crop";
-
-  // Data 20 Projects yang diperluas dengan Image URL untuk Modal
-  const allProjects: Project[] = [
-    { id: "01", title: "VILLAGE ADMINISTRATION", category: "WEB CORE", status: "SUCCESSFUL", desc: "Local resident records platform built using Laravel Framework.", imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" },
-    { id: "02", title: "KBS RENT VEHICLE SYSTEM", category: "WEB CORE", status: "ACTIVE COVER", desc: "Corporate fleet administrative database management.", imageUrl: "https://images.unsplash.com/photo-1579373903281-420a7b456254?q=80&w=1000&auto=format&fit=crop" },
-    { id: "03", title: "ADI TOUR & TRAVEL PORTAL", category: "CMS PORTAL", status: "COMPLETED", desc: "SEO-optimized travel booking portal with custom routing lanes.", imageUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop" },
-    { id: "04", title: "LOMBOK AZMI AGENCY", category: "CMS PORTAL", status: "SUCCESSFUL", desc: "Modern dynamic booking application layout for island excursions.", imageUrl: "https://images.unsplash.com/photo-1616440964820-c5f83865768a?q=80&w=1000&auto=format&fit=crop" },
-    { id: "05", title: "ORDER BACKUP SYSTEM", category: "AUTOMATION", status: "ACTIVE COVER", desc: "Automated ESB API processing unit transferring order logs to sheets.", imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1000&auto=format&fit=crop" },
-    { id: "06", title: "BITBASE DIGITAL LANDING", category: "WEB CORE", status: "SUCCESSFUL", desc: "High-performance marketing sitemaps structured via PHP Native.", imageUrl: "https://images.unsplash.com/photo-1579373903281-420a7b456254?q=80&w=1000&auto=format&fit=crop" },
-    { id: "07", title: "SMPN 1 GUNUNG SARI PORTAL", category: "CMS PORTAL", status: "COMPLETED", desc: "Educational facilities dashboard built with dynamic custom panels.", imageUrl: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1000&auto=format&fit=crop" },
-    { id: "08", title: "SMKN 1 PRINGGABAYA HUB", category: "WEB CORE", status: "SUCCESSFUL", desc: "Custom administrative widgets powered by Filament layout system.", imageUrl: "https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=1000&auto=format&fit=crop" },
-    { id: "09", title: "TOURISM DATABASE EVAL", category: "WEB CORE", status: "COMPLETED", desc: "Vocational evaluation model mapping intricate target queries.", imageUrl: "https://images.unsplash.com/photo-1533035350251-aa8b34f68b19?q=80&w=1000&auto=format&fit=crop" },
-    { id: "10", title: "DEADLINE NOTIFIER TRUCKER", category: "AUTOMATION", status: "ACTIVE COVER", desc: "Google Apps Script automation engine dispatching alerts.", imageUrl: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?q=80&w=1000&auto=format&fit=crop" },
-    { id: "11", title: "PROJECT VALKYRIE EXT", category: "OTHER", status: "SUCCESSFUL", desc: "High-stakes security validation modules mapping network perimeter.", imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000&auto=format&fit=crop" },
-    { id: "12", title: "THORN GARDEN ASSULT", category: "OTHER", status: "COMPLETED", desc: "Custom reactive media component library mirroring asset models.", imageUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=1000&auto=format&fit=crop" },
-    // Tambahkan 20+ project lo di sini
-  ];
 
   const sectionKeys: SectionKey[] = ['profile', 'project', 'tech_stack', 'contact'];
   const navItems: Array<{ id: SectionKey; label: string }> = [
@@ -55,10 +67,6 @@ function App() {
     { id: 'tech_stack', label: 'TECH STACK' },
     { id: 'contact', label: 'CONTACT' },
   ];
-
-  const filteredProjects = activeProjectFilter === 'ALL' 
-    ? allProjects 
-    : allProjects.filter(p => p.category === activeProjectFilter);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,8 +97,8 @@ function App() {
   return (
     <div id="hero-top" className="relative min-h-screen bg-[#FFFFFF] text-[#111111] overflow-x-hidden select-none font-sans scroll-smooth flex flex-col justify-between">
       
-      {/* Dynamic Google Fonts & Custom Filters */}
-      <style>{`
+      {/* Safe Custom Styles Injection via dangerouslySetInnerHTML */}
+      <style dangerouslySetInnerHTML={{ __html: `
         .font-sans { font-family: 'Inter', sans-serif; }
         .font-cyber { font-family: 'Orbitron', sans-serif; }
         .font-serif-brand { font-family: 'Cinzel', sans-serif; }
@@ -101,9 +109,35 @@ function App() {
         }
 
         .char-shadow-filter {
-          filter: grayscale(100%) contrast(125%) brightness(95%) drop-shadow(0 15px 35px rgba(255, 46, 22, 0.55));
+          filter: grayscale(100%) contrast(125%) brightness(95%) drop-shadow(0 8px 16px rgba(255, 46, 22, 0.55));
         }
-      `}</style>
+
+        .char-mask-fade {
+          -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 98%);
+          mask-image: linear-gradient(to bottom, black 65%, transparent 98%);
+        }
+
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .animate-marquee {
+          display: flex;
+          width: max-content;
+          animation: marquee 25s linear infinite;
+        }
+
+        @keyframes scanline {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100%); }
+        }
+
+        .animate-scanline {
+          animation: scanline 2s linear infinite;
+        }
+        
+      `}} />
 
       {/* ================= GFX DIAGONAL CORNER CUTS ================= */}
       <div 
@@ -119,32 +153,109 @@ function App() {
         style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }} 
       />
 
-      {/* ================= GRID AXIS & SYSTEM LINES ================= */}
+      {/* ================= GRID AXIS & SYSTEM LINES (REVISED & MULTIPLIED) ================= */}
       <div className={`fixed inset-0 pointer-events-none z-10 overflow-hidden transition-all duration-700 ${isScrolledDown ? 'opacity-10' : 'opacity-100'}`}>
+        {/* Main Grid Lines */}
         <div className="w-full h-[1.2px] bg-stone-300/60 absolute top-[50%] left-0"></div>
         <div className="w-[1px] h-full bg-stone-200 absolute top-0 left-[10%] hidden lg:block"></div>
         <div className="w-[1px] h-full bg-stone-200 absolute top-0 right-[15%] hidden lg:block"></div>
         
+        {/* Decorative Inner Grid Lines */}
+        <div className="w-[1px] h-full bg-stone-100 absolute top-0 left-[30%] hidden lg:block"></div>
+        <div className="w-[1px] h-full bg-stone-100 absolute top-0 right-[35%] hidden lg:block"></div>
+        <div className="w-full h-[1px] bg-stone-100 absolute top-[25%] left-0 hidden lg:block"></div>
+        <div className="w-full h-[1px] bg-stone-100 absolute bottom-[30%] left-0 hidden lg:block"></div>
+
+        {/* Vertical Anchor Lines */}
         <div className="absolute top-[35%] left-[35%] w-[1px] h-10 bg-stone-400/40"></div>
         <div className="absolute top-[60%] right-[30%] w-[1px] h-12 bg-stone-400/40"></div>
         <div className="absolute bottom-[25%] left-[23%] w-[1px] h-16 bg-stone-400/40"></div>
 
-        {/* Floating Red Pixel Art Blocks */}
+        {/* Anchor Lines for added details */}
+        <div className="absolute top-[18%] left-[62%] w-[1px] h-14 bg-stone-300/60 hidden lg:block"></div>
+        <div className="absolute top-[45%] left-[18%] w-[1px] h-10 bg-stone-300/60 hidden lg:block"></div>
+        <div className="absolute bottom-[35%] right-[22%] w-[1px] h-16 bg-stone-300/60 hidden lg:block"></div>
+        <div className="absolute top-[28%] right-[42%] w-[1px] h-12 bg-stone-300/60 hidden lg:block"></div>
+
+        {/* Red Pixel Art Blocks */}
         <div className="absolute w-4 h-4 bg-[#FF2E16] top-[32%] left-[33%] opacity-90 animate-pulse"></div>
         <div className="absolute w-2.5 h-2.5 bg-[#FF2E16] bottom-[37%] right-[31%] opacity-80"></div>
         <div className="absolute w-1.5 h-1.5 bg-[#FF2E16] bottom-[42%] left-[29%]"></div>
         <div className="absolute w-2.5 h-2.5 bg-[#FF2E16] top-[62%] left-[29%]"></div>
+
+        <div className="absolute w-3.5 h-3.5 bg-[#FF2E16] top-[16%] left-[61.4%] opacity-85 hidden lg:block animate-pulse"></div>
+        <div className="absolute w-2 h-2 bg-[#FF2E16] top-[43.5%] left-[17.6%] opacity-70 hidden lg:block"></div>
+        <div className="absolute w-3.5 h-3.5 bg-[#FF2E16] bottom-[33%] right-[21.6%] opacity-90 hidden lg:block animate-bounce [animation-duration:4s]"></div>
+        <div className="absolute w-2.5 h-2.5 bg-[#FF2E16] top-[26.5%] right-[41.6%] opacity-80 hidden lg:block"></div>
+
+        {/* ================== TOP-RIGHT SIGNAL MONITOR & WAVEFORM ================== */}
+        <div className="absolute top-[18%] right-[8%] hidden lg:flex flex-col gap-2 p-3.5 border border-stone-200/50 bg-[#FFFFFF]/50 backdrop-blur-xs w-56 font-mono text-[9px] text-stone-500 shadow-xs">
+          <div className="flex justify-between items-center border-b border-stone-200 pb-1.5">
+            <span className="text-stone-800 font-bold tracking-wider">[ SIGNAL_MONITOR ]</span>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2E16] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2E16]"></span>
+            </span>
+          </div>
+          {/* Animated Waveform Bars */}
+          <div className="flex items-end justify-between h-9 px-1">
+            <div className="w-[3px] bg-stone-900/60 h-3 animate-[pulse_1s_infinite]"></div>
+            <div className="w-[3px] bg-[#FF2E16]/75 h-6 animate-[pulse_1.5s_infinite_0.1s]"></div>
+            <div className="w-[3px] bg-stone-900/60 h-4 animate-[pulse_0.8s_infinite_0.3s]"></div>
+            <div className="w-[3px] bg-stone-900/60 h-7 animate-[pulse_1.2s_infinite_0.2s]"></div>
+            <div className="w-[3px] bg-[#FF2E16]/75 h-2 animate-[pulse_1.8s_infinite_0.4s]"></div>
+            <div className="w-[3px] bg-stone-900/60 h-5 animate-[pulse_1.1s_infinite_0.5s]"></div>
+            <div className="w-[3px] bg-stone-900/60 h-8 animate-[pulse_1.4s_infinite_0.1s]"></div>
+            <div className="w-[3px] bg-[#FF2E16]/75 h-4 animate-[pulse_0.9s_infinite_0.2s]"></div>
+          </div>
+          <div className="flex justify-between text-[7.5px] text-stone-400 pt-1.5 border-t border-stone-100">
+            <span>FREQ: 433.92 MHz</span>
+            <span>SECURE LINK</span>
+          </div>
+        </div>
+
+        {/* ================== BOTTOM-RIGHT DYNAMIC DECRYPTION KEY & BARCODE ================== */}
+        <div className="absolute bottom-[24%] right-[8%] hidden lg:flex flex-col gap-2.5 p-3.5 border-l-2 border-[#FF2E16] bg-[#FFFFFF]/50 backdrop-blur-xs w-60 font-mono text-[9px] text-stone-500 shadow-xs">
+          <div className="text-[10px] text-stone-900 font-bold tracking-widest">[ TARGET_DECRYPTION ]</div>
+          <div className="space-y-1 text-stone-500">
+            <p className="flex justify-between"><span>&gt; ID:</span> <span className="text-stone-800 font-bold">{sectionMetadata[activeSection].match}</span></p>
+            <p className="flex justify-between"><span>&gt; ALIAS:</span> <span className="text-stone-800 font-bold">{sectionMetadata[activeSection].alias}</span></p>
+            <p className="flex justify-between"><span>&gt; DIRECTIVE:</span> <span className="text-[#FF2E16] font-bold">{sectionMetadata[activeSection].directive}</span></p>
+          </div>
+          {/* Aesthetic Brutalist Barcode */}
+          <div className="flex items-center gap-[2px] h-6 opacity-75 pt-1.5 border-t border-stone-100">
+            <div className="w-[1px] h-full bg-[#111111]"></div>
+            <div className="w-[3px] h-full bg-[#111111]"></div>
+            <div className="w-[1px] h-full bg-[#111111]"></div>
+            <div className="w-[1px] h-full bg-[#111111]"></div>
+            <div className="w-[4px] h-full bg-[#FF2E16]"></div>
+            <div className="w-[1px] h-full bg-[#111111]"></div>
+            <div className="w-[2px] h-full bg-[#111111]"></div>
+            <div className="w-[1px] h-full bg-[#111111]"></div>
+            <div className="w-[3px] h-full bg-[#111111]"></div>
+            <div className="w-[1px] h-full bg-[#FF2E16]"></div>
+            <div className="w-[2px] h-full bg-[#111111]"></div>
+          </div>
+          <div className="text-[7.5px] text-stone-400 tracking-[0.15em] flex justify-between">
+            <span>{sectionMetadata[activeSection].code}</span>
+            <span>SYS_V2.6</span>
+          </div>
+        </div>
+
+        {/* Technical HUD Labels */}
+        <span className="absolute text-[8px] font-cyber text-stone-300/80 top-[14%] left-[11%] hidden lg:block tracking-widest">[GRID_01_SYS_NAV]</span>
+        <span className="absolute text-[8px] font-cyber text-stone-300/80 bottom-[22%] right-[17%] hidden lg:block tracking-widest">[SECURE_NODE_CHYY]</span>
       </div>
 
       {/* ================= HEADER BRANDING BAR & DESKTOP NAV ================= */}
       <div className="fixed top-0 left-0 w-full z-40 p-4 lg:p-6 flex justify-between items-center pointer-events-none select-none">
-        <div className="flex items-center gap-6 pointer-events-auto">
+        <div className="flex items-center gap-10 pointer-events-auto">
           <div className="text-[#111111] font-sans font-black text-[11px] sm:text-xs tracking-[0.35em] flex items-center gap-3 bg-white/60 px-3 py-1.5 backdrop-blur-xs border border-stone-100">
-            <span>+</span> SPY×FAMILY <span>+</span>
+            <span>+</span> SPY×FAMILYxCHYY <span>+</span>
           </div>
 
           {/* ================= DESKTOP NAVIGATION BAR ================= */}
-          <nav className="hidden lg:flex items-center gap-8 pl-10 text-[11px] font-cyber font-black tracking-[0.25em]">
+          <nav className="hidden lg:flex items-center gap-8 pl-10 text-[11px] font-cyber font-black tracking-[0.25em] backdrop-blur-xs">
             {navItems.map((sec) => (
               <button
                 key={sec.id}
@@ -167,7 +278,7 @@ function App() {
         </div>
       </div>
 
-      {/* ================= RELOCATED MOBILE CHARACTER SELECTION (LINGKARAN MERAH) ================= */}
+      {/* ================= RELOCATED MOBILE CHARACTER SELECTION ================= */}
       <div className={`fixed top-18 right-6 z-50 flex flex-col items-center gap-3 pointer-events-auto transition-all duration-700 block lg:hidden ${
         isScrolledDown ? 'opacity-0 translate-x-10 pointer-events-none' : 'opacity-100 translate-x-0'
       }`}>
@@ -210,13 +321,12 @@ function App() {
         isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
         <nav className="flex flex-col items-center gap-8">
-          {sectionKeys.map((item, idx) => (
+          {sectionKeys.map((item) => (
             <button
               key={item}
               onClick={() => handleMenuClick(item)}
               className="group text-3xl sm:text-4xl font-cyber font-black tracking-widest text-stone-400 hover:text-[#111111] transition-colors duration-300 relative py-2 px-6 cursor-pointer"
             >
-              <span className="text-[#FF2E16] text-sm sm:text-base mr-3 font-medium">0{idx + 1}//</span>
               {item.toUpperCase().replace('_', ' ')}
             </button>
           ))}
@@ -230,23 +340,17 @@ function App() {
         <div className={`absolute inset-0 z-0 flex flex-col justify-center items-center pointer-events-none select-none overflow-hidden px-4 transition-all duration-1000 ease-in-out ${
           isScrolledDown ? '-translate-y-[35vh] opacity-0 scale-95' : 'translate-y-0 opacity-95 scale-100'
         }`}>
-          <h1 className="text-[14vw] sm:text-[10vw] font-bold lg:text-[8.5vw] xl:text-[8vw] max-w-[90%] text-center font-brush text-[#FF2E16] uppercase leading-none tracking-tight text-glow-red whitespace-nowrap">
-            ROSIZAMHARI
+          <h1 className="font-assassin text-[8vw] tracking-[0.1em] text-[#C23B22] italic uppercase select-none drop-shadow-[0_4px_12px_rgba(194,59,34,0.15)]">
+            ROSI SAMHARI
           </h1>
         </div>
 
-        {/* THE MAIN HERO ARTWORK */}
-        <div className={`absolute inset-0 z-10 flex justify-center items-start pt-[14vh] sm:items-center sm:pt-0 pointer-events-none px-6 overflow-hidden transition-all duration-1000 ease-in-out ${
-          isScrolledDown ? '-translate-y-[100vh] opacity-0' : 'translate-y-0 opacity-100'
-        }`}>
-          <div className="relative w-[92vw] sm:w-auto h-[58vh] mt-28 sm:h-[75vh] lg:h-[88vh] bg-transparent p-0 border-0 shadow-none animate-float-char flex justify-center items-center origin-center">
-            <img
-              src={characterImages[activeSection]}
-              alt={`Artwork ${activeSection}`}
-              className="h-full w-full sm:w-auto object-contain char-shadow-filter select-none mix-blend-normal sm:mix-blend-multiply transition-all duration-500"
-            />
-          </div>
-        </div>
+        {/* THE MAIN HERO ARTWORK (REVISED WITH HIGH-AESTHETIC BRUTALIST & CYBER-NOIR BACKDROP) */}
+        <HeroArtwork 
+          activeSection={activeSection} 
+          isScrolledDown={isScrolledDown} 
+          characterImages={characterImages} 
+        />
 
         {/* ================= DESKTOP CHARACTER SELECTION ONLY ================= */}
         <div className={`absolute bottom-8 left-[12%] z-30 flex items-center gap-4 pointer-events-auto transition-all duration-700 hidden lg:flex ${
@@ -299,8 +403,11 @@ function App() {
 
               <div className="hidden lg:block lg:col-span-4 pointer-events-none"></div>
               
-              <div className="col-span-12 lg:col-span-4 flex flex-col items-start lg:items-end space-y-4 lg:text-right bg-white/90 sm:bg-transparent backdrop-blur-xs p-4 sm:p-0 border border-stone-200/60 sm:border-0 shadow-xs sm:shadow-none rounded-sm">
-                <div className="font-cyber font-black text-2xl sm:text-3xl tracking-widest text-[#111111]">21:39</div>
+              <div className="col-span-12 lg:col-span-4 flex flex-col items-start lg:items-end space-y-4 lg:text-right sm:bg-transparent p-4 sm:p-0 border border-stone-200/60 sm:border-0 shadow-xs sm:shadow-none rounded-sm">
+                {/* Jam Digital Fungsional */}
+                <div className="font-cyber font-black text-2xl sm:text-3xl tracking-widest text-[#111111]">
+                  {currentTime || '00:00'}
+                </div>
                 <div className="flex items-center gap-3 justify-end">
                   <div className="border border-stone-200 p-0.5 bg-white inline-block w-12 shadow-xs">
                     <img src={cropStripRight} alt="Strip Right" className="w-full h-10 object-cover grayscale contrast-125" />
@@ -374,104 +481,160 @@ function App() {
       </div>
 
       {/* ================= CLASSIFIED PROJECTS SECTION WITH NEW VIEW DETAILS ================= */}
-      <section 
-        id="project"
-        className={`min-h-screen w-full relative z-30 flex flex-col justify-center py-24 px-4 sm:px-8 lg:px-24 transition-all duration-1000 ease-out bg-white border-t border-stone-200/50 ${
-          isScrolledDown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-32 pointer-events-none'
-        }`}
-      >
-        <div className="mb-8 space-y-4 border-b border-stone-200 pb-6">
-          <div className="flex items-center gap-2 text-xs font-cyber tracking-[0.25em] text-[#FF2E16]">
-            <span>//</span> OPERATIONAL DIRECTIVES
-          </div>
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
-            <h2 className="text-3xl sm:text-4xl font-cyber font-black tracking-tight text-[#111111]">
-              CLASSIFIED PROJECTS
-            </h2>
-            
-            {/* TABS CONTROLLER */}
-            <div className="flex flex-wrap gap-2 font-cyber text-[9px] font-bold tracking-wider">
-              {['ALL', 'WEB CORE', 'CMS PORTAL', 'AUTOMATION', 'OTHER'].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveProjectFilter(cat)}
-                  className={`px-3 py-1 border transition-all duration-200 cursor-pointer ${
-                    activeProjectFilter === cat 
-                      ? 'bg-[#111111] text-white border-[#111111]' 
-                      : 'border-stone-200 text-stone-500 hover:border-stone-400 hover:text-stone-900'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Dense Grid Architecture */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
-          {filteredProjects.map((project, idx) => (
-            <div 
-              key={idx} 
-              className="group border border-stone-200 p-5 flex flex-col justify-between h-[210px] transition-all duration-300 hover:border-[#FF2E16] hover:shadow-lg bg-white relative overflow-hidden rounded-sm"
-            >
-              <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-stone-200 group-hover:bg-[#FF2E16] transition-colors"></div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between items-center text-[9px] font-cyber">
-                  <span className="text-stone-400 group-hover:text-[#FF2E16] transition-colors font-bold">
-                    SYS.LOG//0{project.id}
-                  </span>
-                  <span className="text-stone-500 tracking-wider">
-                    [{project.category}]
-                  </span>
-                </div>
-                <div>
-                  <h3 className="font-cyber font-black text-sm text-stone-950 tracking-tight uppercase group-hover:text-[#FF2E16] transition-colors whitespace-nowrap overflow-hidden text-ellipsis">
-                    {project.title}
-                  </h3>
-                </div>
-                <p className="text-[11px] text-stone-500 leading-relaxed font-semibold sm:font-medium tracking-wide line-clamp-2">
-                  {project.desc}
-                </p>
-              </div>
-
-              <div className="border-t border-stone-100 pt-3 flex justify-between items-center text-[9px] font-cyber text-stone-400">
-                <span className="font-bold text-emerald-600 tracking-widest">{project.status}</span>
-                {/* BUTTON BARU: VIEW DETAILS */}
-                <button 
-                  onClick={() => setSelectedProjectForModal(project)}
-                  className="font-bold text-stone-900 group-hover:translate-x-1 transition-transform cursor-pointer group-hover:text-[#FF2E16]"
-                >
-                  VIEW DETAILS &rarr;
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ProjectSection isScrolledDown={isScrolledDown} />
 
       {/* ================= AESTHETIC TACTICAL CONTACT ================= */}
-      <section id="contact" className={`w-full relative z-30 bg-[#FBFBFB] border-t border-stone-200 py-24 px-4 sm:px-8 lg:px-24 transition-all duration-1000 ${
-          isScrolledDown ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}>
-        {/* Konten Contact tetap seperti sebelumnya */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-6 space-y-4">
-            <div className="flex items-center gap-2 text-xs font-cyber tracking-[0.25em] text-[#FF2E16]"><span>//</span> ESTABLISH CONNECTION</div>
-            <h2 className="text-3xl font-cyber font-black tracking-tight text-[#111111]">SECURE COMMS SIGNAL</h2>
-            <p className="text-xs text-stone-500 font-medium leading-relaxed max-w-sm">Jaringan transmisi terbuka. Silakan pilih salah satu jalur frekuensi di samping untuk memulai koordinasi operasi.</p>
-          </div>
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-            {[ { name: 'INSTAGRAM', icon: (<svg className="w-6 h-6 text-stone-400 group-hover:text-[#FF2E16] transition-colors duration-300" viewBox="0 0 24 24"><path d="M7 2 17 2C19.7614 2 22 4.23858 22 7L22 17C22 19.7614 19.7614 22 17 22L7 22C4.23858 22 2 19.7614 2 17L2 7C2 4.23858 4.23858 2 7 2Z" stroke="currentColor" strokeWidth="2" fill="none"/><circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>) }, { name: 'WHATSAPP', icon: (<svg className="w-6 h-6 text-stone-400 group-hover:text-[#FF2E16] transition-colors duration-300" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>) }, { name: 'FACEBOOK', icon: (<svg className="w-6 h-6 text-stone-400 group-hover:text-[#FF2E16] transition-colors duration-300" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>) } ].map((soc) => (
-              <a key={soc.name} href="#" target="_blank" rel="noreferrer" className="group border border-stone-200 bg-white p-5 flex flex-col items-center justify-center gap-4 transition-all duration-300 rounded-sm text-center hover:border-stone-500 hover:shadow-md">
-                {soc.icon}
-                <span className="font-cyber text-[9px] font-black tracking-widest text-stone-500 group-hover:text-stone-900">{soc.name}</span>
-              </a>
-            ))}
-          </div>
+     <section 
+  id="contact" 
+  className={`w-full relative z-30 bg-[#111111] text-[#E5E5E5] border-t border-stone-850 py-24 px-4 sm:px-8 lg:px-24 transition-all duration-1000 overflow-hidden ${
+    isScrolledDown ? 'opacity-100' : 'opacity-0 pointer-events-none'
+  }`}
+>
+  
+  {/* ================= BACKGROUND DECORATIVE GRID ================= */}
+  <div className="absolute inset-0 pointer-events-none opacity-20">
+    <div className="absolute top-0 left-0 w-full h-[1px] bg-stone-800"></div>
+    <div className="absolute top-[20%] left-[15%] w-[1px] h-full bg-stone-850"></div>
+    <div className="absolute top-[40%] right-[25%] w-[1px] h-full bg-stone-850"></div>
+  </div>
+
+  {/* ================= 1. INFINITE RUNNING TICKER (MARQUEE) ================= */}
+  <div className="absolute top-0 left-0 w-full bg-[#FF2E16] text-[#111111] overflow-hidden py-2.5 font-cyber text-[9px] font-black tracking-[0.3em] z-10 border-b border-[#FF2E16]/30">
+    <div className="animate-marquee whitespace-nowrap flex gap-12">
+      <span>[ COMMS FREQUENCY SECURE ] /// INITIALIZING ENCRYPTED HANDSHAKE // ADDR: 0x7FFF08C2 /// STATUS: ACTIVE </span>
+      <span>[ COMMS FREQUENCY SECURE ] /// INITIALIZING ENCRYPTED HANDSHAKE // ADDR: 0x7FFF08C2 /// STATUS: ACTIVE </span>
+      <span>[ COMMS FREQUENCY SECURE ] /// INITIALIZING ENCRYPTED HANDSHAKE // ADDR: 0x7FFF08C2 /// STATUS: ACTIVE </span>
+      <span>[ COMMS FREQUENCY SECURE ] /// INITIALIZING ENCRYPTED HANDSHAKE // ADDR: 0x7FFF08C2 /// STATUS: ACTIVE </span>
+    </div>
+  </div>
+
+  <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch mt-6">
+    
+    {/* ================= 2. LEFT SIDE: TERMINAL CONSOLE LOG ================= */}
+    <div className="lg:col-span-5 flex flex-col justify-between space-y-8 border-l border-stone-800 pl-6 lg:pl-10">
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="w-1.5 h-1.5 bg-[#FF2E16] animate-ping"></span>
+          <span className="font-cyber text-[10px] tracking-[0.3em] text-[#FF2E16] font-bold">ESTABLISH_CONNECTION_V2</span>
         </div>
-      </section>
+        
+        <h2 className="text-4xl font-cyber font-black tracking-tight text-white leading-none">
+          SECURE <br className="hidden lg:block"/>
+          <span className="text-[#FF2E16]">COMMS</span> SIGNAL
+        </h2>
+        
+        <p className="text-xs text-stone-400 font-medium leading-relaxed max-w-sm">
+          Jaringan transmisi terbuka. Silakan hubungi operator kami melalui salah satu port enkripsi eksternal di samping.
+        </p>
+      </div>
+
+      {/* Simulated Server Console */}
+      <div className="bg-[#181818] border border-stone-800/80 p-4 rounded-sm font-mono text-[9px] text-stone-500 space-y-2 relative shadow-inner">
+        <div className="absolute top-2 right-2 flex gap-1">
+          <span className="w-1.5 h-1.5 bg-stone-700 rounded-full"></span>
+          <span className="w-1.5 h-1.5 bg-stone-700 rounded-full"></span>
+          <span className="w-1.5 h-1.5 bg-[#FF2E16] rounded-full animate-pulse"></span>
+        </div>
+        <div className="text-stone-300 font-bold border-b border-stone-800 pb-1.5 mb-1.5">// SYSTEM_LOGS</div>
+        <p className="text-[#FF2E16]/80">&gt; npm run connect --agent=YOR_FORGER</p>
+        <p className="text-stone-400">&gt; [INFO] Routing via secure node: 8.6500° S, 115.2167° E</p>
+        <p className="text-stone-500">&gt; [SUCCESS] Secure connection channel verified.</p>
+        <div className="flex items-center gap-1.5 pt-1 text-[#FF2E16]">
+          <span>&gt;</span>
+          <span className="h-3 w-1.5 bg-[#FF2E16] animate-pulse"></span>
+        </div>
+      </div>
+    </div>
+
+    {/* ================= 3. RIGHT SIDE: HIGH-AESTHETIC KEYCARDS ================= */}
+    <div className="lg:col-span-7 flex flex-col gap-4">
+      {[ 
+        { 
+          name: 'INSTAGRAM', 
+          username: '@rosi.samhari', 
+          port: 'PORT_8080', 
+          ping: '14ms',
+          desc: 'Primary visual transmission & direct dispatch.',
+          link: 'https://instagram.com/', 
+          icon: (
+            <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
+              <path d="M7 2 17 2C19.7614 2 22 4.23858 22 7L22 17C22 19.7614 19.7614 22 17 22L7 22C4.23858 22 2 19.7614 2 17L2 7C2 4.23858 4.23858 2 7 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+            </svg>
+          ) 
+        }, 
+        { 
+          name: 'WHATSAPP', 
+          username: '+62 8xx xxxx xxxx', 
+          port: 'PORT_443', 
+          ping: '8ms',
+          desc: 'Instant priority hotline for rapid tactical support.',
+          link: 'https://wa.me/', 
+          icon: (
+            <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            </svg>
+          ) 
+        }, 
+        { 
+          name: 'FACEBOOK', 
+          username: 'Rosi Samhari', 
+          port: 'PORT_22', 
+          ping: '29ms',
+          desc: 'Legacy routing and secondary backup dispatch portal.',
+          link: 'https://facebook.com/', 
+          icon: (
+            <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            </svg>
+          ) 
+        } 
+      ].map((soc, idx) => (
+        <a 
+          key={soc.name} 
+          href={soc.link} 
+          target="_blank" 
+          rel="noreferrer" 
+          className="group relative border border-stone-800 bg-[#141414] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300 rounded-xs hover:border-[#FF2E16]/80 hover:bg-[#1C1C1C] overflow-hidden"
+        >
+          {/* Subtle Hover Scanline Effect */}
+          <div className="absolute inset-0 bg-linear-to-b from-[#FF2E16]/5 to-transparent h-1/2 opacity-0 group-hover:opacity-100 pointer-events-none animate-scanline"></div>
+          
+          <div className="flex items-center gap-4 relative z-10">
+            {/* Hologram Box */}
+            <div className="border border-stone-800 bg-[#1C1C1C] p-3 transition-colors duration-300 group-hover:border-[#FF2E16] group-hover:bg-[#FF2E16]/5">
+              {soc.icon}
+            </div>
+            
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="font-cyber text-xs font-black tracking-widest text-white">{soc.name}</span>
+                <span className="text-[7.5px] font-mono text-stone-600 bg-stone-900 border border-stone-850 px-1 py-[1px]">{soc.port}</span>
+              </div>
+              <p className="font-mono text-[10px] text-[#FF2E16] font-bold tracking-wider">{soc.username}</p>
+              <p className="text-[10px] text-stone-500 max-w-xs sm:max-w-md hidden sm:block">{soc.desc}</p>
+            </div>
+          </div>
+
+          {/* Aesthetic Tactical Details on the Right side */}
+          <div className="flex sm:flex-col items-end justify-between w-full sm:w-auto border-t border-stone-850 sm:border-0 pt-3 sm:pt-0 font-mono text-[9px] text-stone-500 gap-1.5 relative z-10">
+            <span className="hidden sm:inline">[STABLE_SECURE]</span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>PING: <strong className="text-emerald-400">{soc.ping}</strong></span>
+            </div>
+            <span className="text-stone-600 font-bold group-hover:text-[#FF2E16] transition-colors duration-300">ACTIVATE_LINK &rarr;</span>
+          </div>
+
+          {/* Tech/Corner Cut Accent */}
+          <div className="absolute top-0 right-0 w-2 h-2 bg-stone-800 transition-colors duration-300 group-hover:bg-[#FF2E16]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}></div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* ================= TACTICAL SYSTEM FOOTER ================= */}
       <footer className="relative z-30 w-full bg-[#111111] text-stone-400 border-t border-stone-900 py-8 px-4 sm:px-8 lg:px-12 select-none">
@@ -482,73 +645,8 @@ function App() {
         </div>
       </footer>
 
-      {/* ================= AESTHETIC PROJECT DETAIL MODAL (BARU) ================= */}
-      {selectedProjectForModal && (
-        <div 
-          className="fixed inset-0 z-50 flex justify-center items-center p-4 transition-all duration-300 ease-out"
-          style={{ opacity: selectedProjectForModal ? 1 : 0, visibility: selectedProjectForModal ? 'visible' : 'hidden' }}
-        >
-          {/* Backdrop Blur */}
-          <div className="absolute inset-0 bg-stone-950/60 backdrop-blur-lg" onClick={() => setSelectedProjectForModal(null)}></div>
-          
-          {/* Modal Container */}
-          <div className="relative bg-white border-2 border-[#FF2E16] max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-[#FF2E16]/30 animate-modal-zoom rounded-sm group">
-            {/* Header Taktis */}
-            <div className="flex justify-between items-center bg-stone-950 text-stone-100 p-4 border-b border-[#FF2E16]">
-              <div className="flex items-center gap-3 font-cyber text-[10px] tracking-widest font-black uppercase text-stone-200">
-                <span>[LOG ENTRY//0{selectedProjectForModal.id}]</span>
-                <span>[{selectedProjectForModal.category}]</span>
-              </div>
-              <button 
-                onClick={() => setSelectedProjectForModal(null)}
-                className="text-stone-400 hover:text-[#FF2E16] text-xl font-bold transition-colors cursor-pointer"
-              >
-                &times;
-              </button>
-            </div>
-
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 p-6 md:p-8">
-              {/* Image grayscale taktis (Solusi: menampilkan gambar project) */}
-              <div className="md:col-span-7 h-[30vh] md:h-[50vh] overflow-hidden border border-stone-200 group-hover:border-[#FF2E16] transition-colors rounded-sm">
-                <img 
-                  src={selectedProjectForModal.imageUrl} 
-                  alt={selectedProjectForModal.title} 
-                  className="w-full h-full object-cover grayscale contrast-125 transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              {/* Data Detail Taktis (Solusi: menampilkan keterangan project) */}
-              <div className="md:col-span-5 flex flex-col justify-between gap-6">
-                <div className="space-y-6">
-                  <span className="font-cyber text-[11px] font-bold text-[#FF2E16] tracking-[0.2em] block">// COMPILED DATA_VIEW //</span>
-                  <h2 className="font-cyber font-black text-2xl text-stone-950 tracking-tight uppercase">{selectedProjectForModal.title}</h2>
-                  <div className="w-16 h-[2px] bg-stone-900"></div>
-                  <p className="text-sm text-stone-700 leading-relaxed font-semibold sm:font-medium tracking-wide">
-                    {selectedProjectForModal.desc}
-                    <br/><br/>
-                    Detailed architectural deployment log: [ENCRYPTED DATA PATH]. This operational mandate was successfully validated via core systems protocols on secure network grids, fulfilling all strategic objectives without any discernible compromise to Garden infrastructure integrity models. Operational summary data remains classified.
-                  </p>
-                </div>
-                
-                {/* Footer Modal Taktis */}
-                <div className="border-t border-stone-100 pt-5 flex justify-between items-center text-[11px] font-cyber text-stone-400">
-                  <span className="font-bold text-emerald-600 tracking-widest">{selectedProjectForModal.status}</span>
-                  <a href="#" target="_blank" className="font-bold text-stone-900 hover:text-[#FF2E16] transition-colors cursor-pointer">LAUNCH PROJECT PAGE &rarr;</a>
-                </div>
-              </div>
-            </div>
-            
-            {/* Modal GFX Dekorator */}
-            <div className="absolute top-1/2 left-0 w-2 h-24 bg-[#FF2E16] -translate-y-1/2"></div>
-            <div className="absolute top-1/2 right-0 w-2 h-24 bg-[#FF2E16] -translate-y-1/2"></div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
 
 export default App;
-

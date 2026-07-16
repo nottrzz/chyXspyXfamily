@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600&family=Inter:wght@400;600&display=swap');
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Road+Rage&display=swap');
 
 @theme {
   /* Custom Colors */
@@ -9,6 +10,9 @@
   /* Custom Fonts */
   --font-cyber: "Chakra Petch", sans-serif;
   --font-spybody: "Inter", sans-serif;
+
+  /* NEW */
+  --font-road-rage : 'Road Rage', cursive;
 
   /* Floating Base Animations */
   --animate-float-char: floatChar 6s ease-in-out infinite;
@@ -46,4 +50,64 @@
     0% { filter: blur(15px); opacity: 0; transform: scale(1.02); }
     100% { filter: blur(0); opacity: 1; transform: scale(1); }
   }
+}
+
+@keyframes sword-gleam {
+  0% {
+    transform: translateX(-100%) skewX(-25deg);
+  }
+  50%, 100% {
+    transform: translateX(200%) skewX(-25deg);
+  }
+}
+
+@keyframes blade-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px rgba(194, 59, 34, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(194, 59, 34, 0.8));
+  }
+}
+
+.animate-sword-gleam {
+  animation: sword-gleam 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-blade-pulse {
+  animation: blade-pulse 3s ease-in-out infinite;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Syne:wght@800&display=swap');
+
+/* Tambahkan class custom ini untuk efek goresan pedang */
+.font-assassin {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+.font-agency-heavy {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+}
+
+/* Tambahkan baris ini di dalam tag <style dangerouslySetInnerHTML={{ __html: `...` }} /> */
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-scanline {
+  animation: scanline 2s linear infinite;
 }
