@@ -590,7 +590,7 @@ function App() {
             </svg>
           ) 
         } 
-      ].map((soc, idx) => (
+      ].map((soc) => (
         <a 
           key={soc.name} 
           href={soc.link} 

@@ -90,24 +90,3 @@
   font-weight: 800;
 }
 
-/* Tambahkan baris ini di dalam tag <style dangerouslySetInnerHTML={{ __html: `...` }} /> */
-
-@keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 25s linear infinite;
-}
-
-@keyframes scanline {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-.animate-scanline {
-  animation: scanline 2s linear infinite;
-}
