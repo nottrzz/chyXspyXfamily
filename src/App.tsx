@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import ProjectSection from './components/ProjectSection'; 
-import { HeroArtwork } from './components/HeroArtwork'; // <- Pastikan di file HeroArtwork.tsx diexport sebagai named export 'export const HeroArtwork ...'
+import { HeroArtwork } from './components/HeroArtwork'; 
 
 type SectionKey = 'profile' | 'project' | 'tech_stack' | 'contact';
 
-// Metadata Dekripsi Taktis Dinamis untuk Elemen Kanan Bawah (Reaktif)
+// Metadata Dekripsi Elemen Kanan Bawah
 const sectionMetadata: Record<SectionKey, { match: string; alias: string; directive: string; code: string }> = {
   profile: {
     match: "YOR_FORGER",
@@ -465,7 +465,7 @@ function App() {
             </div>
           )}
 
-          {/* SECTION 4: CONTACT INFO */}
+          {/* {SECTION 4: CONTACT INFO } */}
           {activeSection === 'contact' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full my-auto z-20 pb-20 lg:pb-0">
               <div className="col-span-12 lg:col-span-4 bg-stone-950 text-stone-300 p-4 border border-stone-900 shadow-xl space-y-2 max-w-xs rounded-sm">
@@ -485,11 +485,12 @@ function App() {
 
       {/* ================= AESTHETIC TACTICAL CONTACT ================= */}
      <section 
-  id="contact" 
-  className={`w-full relative z-30 bg-[#111111] text-[#E5E5E5] border-t border-stone-850 py-24 px-4 sm:px-8 lg:px-24 transition-all duration-1000 overflow-hidden ${
-    isScrolledDown ? 'opacity-100' : 'opacity-0 pointer-events-none'
-  }`}
->
+        id="contact" 
+        className={`w-full relative z-30 bg-[#111111] text-[#E5E5E5] border-t border-stone-850 py-24 px-4 sm:px-8 lg:px-24 transition-all duration-1000 overflow-hidden 
+          ${
+          isScrolledDown ? 
+          'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      >
   
   {/* ================= BACKGROUND DECORATIVE GRID ================= */}
   <div className="absolute inset-0 pointer-events-none opacity-20">
@@ -546,16 +547,16 @@ function App() {
       </div>
     </div>
 
-    {/* ================= 3. RIGHT SIDE: HIGH-AESTHETIC KEYCARDS ================= */}
+    {/* ================= 3. RIGHT SIDE: HIGH-AESTHETIC KEYCARDS OHOK OHOK ================= */}
     <div className="lg:col-span-7 flex flex-col gap-4">
       {[ 
         { 
           name: 'INSTAGRAM', 
-          username: '@rosi.samhari', 
+          username: '@_rzmhr', 
           port: 'PORT_8080', 
           ping: '14ms',
           desc: 'Primary visual transmission & direct dispatch.',
-          link: 'https://instagram.com/', 
+          link: 'https://www.instagram.com/_rzmhr/', 
           icon: (
             <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
               <path d="M7 2 17 2C19.7614 2 22 4.23858 22 7L22 17C22 19.7614 19.7614 22 17 22L7 22C4.23858 22 2 19.7614 2 17L2 7C2 4.23858 4.23858 2 7 2Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
@@ -566,11 +567,11 @@ function App() {
         }, 
         { 
           name: 'WHATSAPP', 
-          username: '+62 8xx xxxx xxxx', 
+          username: '+62 81779****49', 
           port: 'PORT_443', 
           ping: '8ms',
           desc: 'Instant priority hotline for rapid tactical support.',
-          link: 'https://wa.me/', 
+          link: 'https://wa.me/6281779802449', 
           icon: (
             <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
@@ -578,22 +579,22 @@ function App() {
           ) 
         }, 
         { 
-          name: 'FACEBOOK', 
-          username: 'Rosi Samhari', 
+          name: 'GITHUB', 
+          username: 'nottrzz', 
           port: 'PORT_22', 
-          ping: '29ms',
+          ping: '20ms',
           desc: 'Legacy routing and secondary backup dispatch portal.',
-          link: 'https://facebook.com/', 
+          link: 'https://github.com/nottrzz', 
           icon: (
             <svg className="w-6 h-6 text-[#FF2E16]" viewBox="0 0 24 24">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <path fill-rule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.6 9.6 0 0 1 2.496-.336 9.6 9.6 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2" clip-rule="evenodd"></path>
             </svg>
           ) 
         } 
       ].map((soc) => (
         <a 
           key={soc.name} 
-          href={soc.link} 
+          href={soc.link}
           target="_blank" 
           rel="noreferrer" 
           className="group relative border border-stone-800 bg-[#141414] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300 rounded-xs hover:border-[#FF2E16]/80 hover:bg-[#1C1C1C] overflow-hidden"
